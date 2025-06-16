@@ -18,6 +18,10 @@ urlpatterns = [
     path('blog/',views.BlogView.as_view()),
     path('comment/',views.CommentView.as_view()),
 
+    path('blog/<int:pk>/',views.BlogDetailView.as_view()),
+    path('comment/<int:pk>/',views.CommentDetailView.as_view()),
+
+
 
 ]
     

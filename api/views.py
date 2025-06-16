@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-# from django.http import JsonResponse
+from django.http import JsonResponse
 from students.models import Student
 from .serializers import StudentSerializer, EmployeeSerializer, BlogSerializer, CommentSerializer
 from rest_framework.response import Response
@@ -9,8 +9,8 @@ from rest_framework.views import APIView
 from employees.models import Employee
 from django.http import Http404
 from rest_framework import mixins, generics, viewsets
-from .models import Blog, Comment
-
+from blog.models import Blog, Comment 
+from .paginations import CustomPagination
 
 @api_view(['GET','POST'])
 # Create your views here.
@@ -175,6 +175,7 @@ class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
 class EmployeeViewset(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+    pagination_class = CustomPagination
 
 class BlogView(generics.ListCreateAPIView):
     queryset = Blog.objects.all()
@@ -184,3 +185,12 @@ class CommentView(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
   
+class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+    lookup_field = 'pk'
+
+class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    lookup_field = 'pk'
