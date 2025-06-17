@@ -11,6 +11,8 @@ from django.http import Http404
 from rest_framework import mixins, generics, viewsets
 from blog.models import Blog, Comment 
 from .paginations import CustomPagination
+from employees.filters import EmployeeFilter
+from rest_framework.filters import SearchFilter,OrderingFilter
 
 @api_view(['GET','POST'])
 # Create your views here.
@@ -173,13 +175,19 @@ class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
 #          return Response(status=status.HTTP_204_NO_CONTENT)
 
 class EmployeeViewset(viewsets.ModelViewSet):
-    queryset = Employee.objects.all()
+    queryset = Employee.objects.all().order_by('id')
     serializer_class = EmployeeSerializer
     pagination_class = CustomPagination
+    # filterset_fields = ['designation']
+    filterset_class =EmployeeFilter 
 
 class BlogView(generics.ListCreateAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['blog_title','blog_body']
+    ordering_fields = ['id','blog_title']
+
  
 class CommentView(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
